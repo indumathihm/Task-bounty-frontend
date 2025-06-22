@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { createTaskWithWallet, updateTask, fetchMyTasks } from "../../slices/taskSlice";
 import { fetchCategories } from "../../slices/categorySlice";
 import { toast } from "react-toastify";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 export default function TaskForm() {
   const dispatch = useDispatch();
@@ -151,12 +153,12 @@ export default function TaskForm() {
 
   if (!user) return <div>Loading...</div>;
 
-  const minDate = new Date(Date.now() + 86400000).toISOString().split("T")[0]; // Tomorrow
+  const minDate = new Date(Date.now() + 86400000); 
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="max-w-2xl mx-auto p-6  rounded-md space-y-4"
+      className="max-w-2xl mx-auto p-6 rounded-md space-y-4"
     >
       <h1 className="text-2xl font-semibold text-gray-800 text-center mb-4">
         {editId ? "Edit Task Description" : "Create New Task"}
@@ -169,12 +171,10 @@ export default function TaskForm() {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           disabled={!!editId}
-          className="w-full p-2 border rounded"
+          className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Enter task title"
         />
-        {errors.title && (
-          <p className="text-red-500 text-sm">{errors.title}</p>
-        )}
+        {errors.title && <p className="text-red-500 text-sm">{errors.title}</p>}
       </div>
 
       <div>
@@ -182,13 +182,11 @@ export default function TaskForm() {
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          className="w-full p-2 border rounded"
+          className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Describe the task"
           rows={4}
         />
-        {errors.description && (
-          <p className="text-red-500 text-sm">{errors.description}</p>
-        )}
+        {errors.description && <p className="text-red-500 text-sm">{errors.description}</p>}
       </div>
 
       <div>
@@ -198,12 +196,10 @@ export default function TaskForm() {
           value={budget}
           onChange={(e) => setBudget(e.target.value)}
           disabled={!!editId}
-          className="w-full p-2 border rounded"
+          className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Enter task budget"
         />
-        {errors.budget && (
-          <p className="text-red-500 text-sm">{errors.budget}</p>
-        )}
+        {errors.budget && <p className="text-red-500 text-sm">{errors.budget}</p>}
       </div>
 
       <div>
@@ -212,7 +208,7 @@ export default function TaskForm() {
           value={category}
           onChange={(e) => setCategory(e.target.value)}
           disabled={!!editId}
-          className="w-full p-2 border rounded"
+          className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="">Select a category</option>
           {categories?.map((cat) => (
@@ -221,37 +217,31 @@ export default function TaskForm() {
             </option>
           ))}
         </select>
-        {errors.category && (
-          <p className="text-red-500 text-sm">{errors.category}</p>
-        )}
+        {errors.category && <p className="text-red-500 text-sm">{errors.category}</p>}
       </div>
 
       <div>
         <label className="block mb-1 font-medium">Bid End Date</label>
-        <input
-          type="date"
-          value={bidEndDate}
-          onChange={(e) => setBidEndDate(e.target.value)}
-          className="w-full p-2 border rounded"
-          min={minDate}
+        <DatePicker
+          selected={bidEndDate ? new Date(bidEndDate) : null}
+          onChange={(date) => setBidEndDate(date.toISOString().split("T")[0])}
+          className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          minDate={minDate}
+          placeholderText="Select bid end date"
         />
-        {errors.bidEndDate && (
-          <p className="text-red-500 text-sm">{errors.bidEndDate}</p>
-        )}
+        {errors.bidEndDate && <p className="text-red-500 text-sm">{errors.bidEndDate}</p>}
       </div>
 
       <div>
         <label className="block mb-1 font-medium">Task Deadline</label>
-        <input
-          type="date"
-          value={deadline}
-          onChange={(e) => setDeadline(e.target.value)}
-          className="w-full p-2 border rounded"
-          min={minDate}
+        <DatePicker
+          selected={deadline ? new Date(deadline) : null}
+          onChange={(date) => setDeadline(date.toISOString().split("T")[0])}
+          className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          minDate={minDate}
+          placeholderText="Select deadline"
         />
-        {errors.deadline && (
-          <p className="text-red-500 text-sm">{errors.deadline}</p>
-        )}
+        {errors.deadline && <p className="text-red-500 text-sm">{errors.deadline}</p>}
       </div>
 
       <button

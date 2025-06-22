@@ -1,5 +1,5 @@
 import axios from '../../config/axios.js';
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { isEmail, isMobilePhone } from 'validator';
 import { useNavigate } from 'react-router-dom';
 import { FaUser, FaEnvelope, FaLock, FaPhone } from 'react-icons/fa';
@@ -14,7 +14,24 @@ export default function Register() {
   const [role, setRole] = useState('');
   const [clientErrors, setClientErrors] = useState({});
   const [serverErrors, setServerErrors] = useState(null);
+  const [showRole, setShowRole] = useState(true);
+
   const navigate = useNavigate();
+
+  useEffect(() => {
+  const checkFirstUser = async () => {
+    try {
+      const res = await axios.get('/users/count');
+      if (res.data.count === 0) {
+        setShowRole(false); 
+      }
+    } catch (err) {
+      console.error("Failed to check user count", err);
+    }
+  };
+  checkFirstUser();
+}, []);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -42,9 +59,10 @@ export default function Register() {
       errors.password = 'Password must be between 8 and 128 characters';
     }
 
-    if (!role) {
+    if (showRole && !role) {
       errors.role = 'Role is required';
     }
+
 
     if (Object.keys(errors).length > 0) {
       setClientErrors(errors);
@@ -143,32 +161,34 @@ export default function Register() {
           </div>
           {clientErrors.password && <p className="text-red-500 text-sm">{clientErrors.password}</p>}
 
-          <div className="mt-4">
-            <p className="mb-2 font-medium">Select Role:</p>
-            <label className="inline-flex items-center mr-4">
-              <input
-                type="radio"
-                name="role"
-                value="poster"
-                checked={role === 'poster'}
-                onChange={() => setRole("poster")}
-                className="mr-2"
-              />
-              Poster
-            </label>
-            <label className="inline-flex items-center">
-              <input
-                type="radio"
-                name="role"
-                value="hunter"
-                checked={role === 'hunter'}
-                onChange={() => setRole("hunter")}
-                className="mr-2"
-              />
-              Hunter
-            </label>
-            {clientErrors.role && <p className="text-red-500 text-sm">{clientErrors.role}</p>}
-          </div>
+          {showRole && (
+            <div className="mt-4">
+              <p className="mb-2 font-medium">Select Role:</p>
+              <label className="inline-flex items-center mr-4">
+                <input
+                  type="radio"
+                  name="role"
+                  value="poster"
+                  checked={role === 'poster'}
+                  onChange={() => setRole("poster")}
+                  className="mr-2"
+                />
+                Poster
+              </label>
+              <label className="inline-flex items-center">
+                <input
+                  type="radio"
+                  name="role"
+                  value="hunter"
+                  checked={role === 'hunter'}
+                  onChange={() => setRole("hunter")}
+                  className="mr-2"
+                />
+                Hunter
+              </label>
+              {clientErrors.role && <p className="text-red-500 text-sm">{clientErrors.role}</p>}
+            </div>
+          )}
 
           <div>
             <button

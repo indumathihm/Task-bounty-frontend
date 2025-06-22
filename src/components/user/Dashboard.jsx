@@ -34,7 +34,7 @@ export default function Dashboard() {
   const tabComponents = {
     profile: (
       <>
-        <h2 className="text-3xl font-bold mb-6 text-gray-800">Profile Information</h2>
+        <h2 className="text-2xl md:text-3xl font-bold mb-6 text-gray-800">Profile Information</h2>
         <Profile />
       </>
     ),
@@ -50,9 +50,9 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="flex min-h-screen">
-      <aside className="w-1/4 p-6 bg-white shadow rounded-2xl mr-6 text-center">
-        <div className="relative w-28 h-28 rounded-full border-2 border-blue-600 mx-auto bg-gray-300 overflow-hidden flex items-center justify-center font-bold text-white">
+    <div className="flex flex-col md:flex-row min-h-screen p-4 gap-6 bg-gray-100">
+      <aside className="w-full md:w-1/4 bg-white shadow rounded-2xl p-6 text-center">
+        <div className="relative w-24 h-24 md:w-28 md:h-28 rounded-full border-2 border-blue-600 mx-auto bg-gray-300 overflow-hidden flex items-center justify-center font-bold text-white text-xl">
           {data.avatar ? (
             <img src={data.avatar} alt="Avatar" className="w-full h-full object-cover" />
           ) : (
@@ -69,14 +69,14 @@ export default function Dashboard() {
           <span className="bg-blue-100 text-blue-600 text-sm px-3 py-1 rounded-full">{data.role}</span>
         </div>
 
-        <p className="text-gray-600 mt-1">{data.email}</p>
+        <p className="text-gray-600 mt-1 text-sm">{data.email}</p>
 
         <nav className="mt-6 text-left">
           {tabs.map((tab) => (
             <button
               key={tab}
-              className={`w-full text-left p-2 mb-2 rounded hover:bg-blue-300 ${
-                currentTab === tab ? "bg-blue-100" : ""
+              className={`w-full text-left p-2 mb-2 rounded hover:bg-blue-200 ${
+                currentTab === tab ? "bg-blue-100 font-semibold" : ""
               }`}
               onClick={() => navigate(`/user-info/${tab}`)}
             >
@@ -86,7 +86,7 @@ export default function Dashboard() {
         </nav>
       </aside>
 
-      <main className="w-3/4 p-6 bg-white shadow rounded-2xl">
+      <main className="w-full md:w-3/4 bg-white shadow rounded-2xl p-6">
         {tabComponents[currentTab] || <p className="text-red-500">Tab not found</p>}
       </main>
     </div>
